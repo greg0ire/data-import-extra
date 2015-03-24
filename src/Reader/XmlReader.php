@@ -25,11 +25,21 @@ class XmlReader implements ReaderInerface
     protected $xmlIterator;
 
     /**
+     * In charge of reading elements as opposed to finding rows in the whole file
+     */
+    protected $xmlElementReader;
+
+    /**
      * @param XmlIterator $xmlIterator
      */
     public function __construct(XmlIterator $xmlIterator)
     {
         $this->xmlIterator = $xmlIterator;
+    }
+
+    public function setXmlElementReader(XmlElementReaderInterface $xmlElementReader)
+    {
+        $this->xmlElementReader = $xmlElementReader;
     }
 
     /**
@@ -45,7 +55,9 @@ class XmlReader implements ReaderInerface
      */
     public function current()
     {
-        return $this->xmlIterator->current();
+        return isset($this->xmlElementReader) ?
+            $this->xmlElementReader->read(/* TODO: figure out what to put here*/) :
+            $this->xmlIterator->current();
     }
 
     /**
